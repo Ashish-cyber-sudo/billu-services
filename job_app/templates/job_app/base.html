@@ -1,40 +1,43 @@
 <!doctype html>
 <html lang="en">
   <style>
-
-.search-select, .search-input {
-    border-radius: 20px !important;
+    /* Pill-shaped search controls */
+.search-select,
+.search-input {
+  border-radius: 999px !important;
 }
 
 .search-input {
-    padding-left: 15px;
-    padding-right: 15px;
+  padding-inline: 15px;
 }
 
+/* Suggestions dropdown */
 .suggestions-box {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,.15);
-    display: none;
-    max-height: 260px;
-    overflow-y: auto;
-    z-index: 2000;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 2000;
+  background-color: #fff;
 }
 
 .suggestions-box.show {
-    display: block;
+  display: block;
 }
 
+/* Radius slider section */
 .radius-wrapper {
   width: 180px;
 }
 
 .radius-label {
   font-size: 0.85rem;
-  color: #ddd;
+  color: #6c757d;
   white-space: nowrap;
 }
 
@@ -56,7 +59,7 @@
   border: 2px solid #ffc107;
   border-radius: 50%;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.2s;
 }
 
 .radius-slider::-webkit-slider-thumb:hover {
@@ -69,39 +72,48 @@
   font-size: 0.9rem;
 }
 
-.main-container {
-  padding-top: 35px;
-  height:100vh
-}
-
-.footer{
-  margin-top: 176px;
-}
-</style>
-
+    </style>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Billu{% endblock %}</title>
+
+  <!-- Bootstrap & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   {% load static %}
+  <!-- Your global styles -->
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
 </head>
-<body class="main-container">
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+  {# Navbar #}
   {% include 'job_app/navbar.html' %}
-  <main class="container py-4">
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
+
+  {# Main content area #}
+  <main class="flex-fill container py-4">
+    {% if messages %}
+      <div class="mb-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} mb-2">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
   </main>
+
+  {# Footer #}
+  {% include "job_app/footer.html" %}
+
+  <!-- Bootstrap JS bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  {% include "job_app/footer.html"%}
+
   {% block scripts %}{% endblock %}
-  
 </body>
 </html>
