@@ -1,0 +1,15 @@
+{% extends 'job_app/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card p-4">
+      <h3>Book: {{ service.title }}</h3>
+      <form method="post">{% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success">Confirm & Pay</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

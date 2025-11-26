@@ -1,0 +1,49 @@
+{% extends 'job_app/base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm p-4 text-center">
+        <h4 class="fw-bold mb-3">Confirm Payment</h4>
+        <p class="mb-2">You are about to pay for:</p>
+        <h5 class="text-primary mb-3">{{ service.title }}</h5>
+
+        <div class="alert alert-info py-2">
+          <strong>Amount:</strong> ₹{{ amount|floatformat:2 }}
+        </div>
+
+        <button id="rzp-button" class="btn btn-success btn-lg w-100 mt-3">
+          Pay with Razorpay
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var options = {
+          "key": "{{ razorpay_key }}",
+          "amount": "{{ amount|floatformat:2|floatformat:0|add:'0' }}", // convert ₹ to paise
+          "currency": "INR",
+          "name": "Service Booking",
+          "description": "{{ service.title }}",
+          "order_id": "{{ order_id }}",
+          "handler": function (response){
+              window.location.href = "{% url 'job_app:payment_success' booking.id %}?payment_id=" + response.razorpay_payment_id;
+          },
+          "theme": { "color": "#0d6efd" }
+      };
+
+      var rzp1 = new Razorpay(options);
+      document.getElementById('rzp-button').onclick = function(e){
+          rzp1.open();
+          e.preventDefault();
+      }
+  });
+</script>
+
+{% endblock %}
+

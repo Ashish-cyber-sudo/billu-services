@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Book Service</title></head>
+<body>
+    <h1>Book {{ service.name }} with {{ provider.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Booking</button>
+    </form>
+    <a href="{% url 'service_detail' service.id %}">Back</a>
+</body>
+</html>

@@ -1,0 +1,265 @@
+{% extends 'job_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .dashboard-sidebar {
+    height: 62.4vh;
+    background: #ffffff;
+    border-right: 1px solid #ddd;
+    padding-top: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    text-align: center;
+  }
+
+  .profile-box {
+    margin-bottom: 25px;
+  }
+
+  .profile-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0d6efd;
+  }
+
+  .profile-box h5 {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .dashboard-sidebar .nav-link {
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+    text-align: left;
+  }
+
+  .dashboard-sidebar .nav-link:hover,
+  .dashboard-sidebar .nav-link.active {
+    background: #333;
+    color: #fff !important;
+  }
+
+  .dashboard-content {
+    height: 45vh;
+    margin-left: 260px;
+    padding: 35px;
+  }
+</style>
+
+<div class="dashboard-sidebar">
+
+  <!-- Profile Section -->
+ {% load static %}
+
+<div class="d-flex align-items-center mb-4">
+  {% if user.profile.profile_image %}
+    <img src="{{ user.profile.profile_image.url }}" 
+         alt="Profile Image" 
+         class="rounded-circle me-3 border"
+         width="80" height="80">
+  {% else %}
+    <img src="{% static 'images/default.png' %}" 
+         alt="Default Image" 
+         class="rounded-circle me-3 border"
+         width="80" height="80">
+  {% endif %}
+  <div>
+    <h4 class="mb-0">{{ user.get_full_name|default:user.username }}</h4>
+    <p class="text-muted mb-0">{{ user.profile.get_role_display }}</p>
+  </div>
+</div>
+
+
+  <!-- Sidebar Menu -->
+  <ul class="nav flex-column px-2">
+    <li class="nav-item">
+      <a class="nav-link {% if section == 'bookings' %}active{% endif %}" href="{% url 'job_app:user_bookings' %}">
+        My Bookings
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link {% if section == 'profile' %}active{% endif %}" href="{% url 'job_app:profile_settings' %}">
+        Profile Settings
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+<div class="dashboard-content">
+
+        <!-- Main -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <h3>Welcome Provider, {{ user.username }} 👍</h3>
+
+            <!-- Ring Tone -->
+            <audio id="ringTone" src="{% static 'sounds/ring.mp3' %}" preload="auto"></audio>
+
+            <!-- Modal -->
+           <div id="requestBox" class="alert alert-info mt-4" style="display:none;">
+                <h5>New Service Request!</h5>
+                <p id="reqService"></p>
+                <p id="reqUser"></p>
+                <p id="reqPhone"></p>
+                    
+                <button id="acceptBtn" class="btn btn-success">Accept</button>
+                <button id="declineBtn" class="btn btn-danger">Decline</button>
+              </div>
+
+   <!-- Incoming Request Modal -->
+    <div class="modal fade" id="incomingRequestModal" tabindex="-1" aria-labelledby="incomingRequestLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="incomingRequestLabel">New Service Request</h5>
+                </div>
+
+                <div class="modal-body">
+                    <p><strong>Service:</strong> <span id="modalServiceTitle"></span></p>
+                    <p><strong>From:</strong> <span id="modalSeekerName"></span></p>
+                    <p><strong>Phone:</strong> <span id="modalSeekerPhone"></span></p>
+                    <p><strong>Location:</strong> <span id="modalSeekerLocation"></span></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-danger" onclick="declineRequest()">Decline</button>
+                    <button class="btn btn-success" onclick="acceptRequest()">Accept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+            <!-- Stats -->
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="card shadow-sm p-3">
+                        <h5>Total Services</h5>
+                        <p class="fs-4">{{ services.count }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm p-3">
+                        <h5>Total Bookings</h5>
+                        <p class="fs-4">{{ bookings.count }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button -->
+            <a href="{% url 'job_app:service_add' %}" class="btn btn-primary mt-4">+ Add New Service</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const providerId = "{{ request.user.profile.id }}";
+const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+const wsUrl = `${wsProtocol}://${window.location.host}/ws/notifications/${providerId}/`;
+
+const socket = new WebSocket(wsUrl);
+const ring = document.getElementById("ringTone");
+let currentRequestId = null;
+
+socket.onopen = () => console.log("WS CONNECTED");
+
+// Receive New Request
+socket.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+
+    if (data.type === "send_request") {
+        currentRequestId = data.request_id;
+
+        document.getElementById("reqService").innerText = "Service: " + data.service;
+        document.getElementById("reqUser").innerText = "From: " + data.seeker;
+        document.getElementById("reqPhone").innerText = "Phone: " + data.phone;
+
+        document.getElementById("requestBox").style.display = "block";
+
+        ring.play().catch(err => console.log("Autoplay Blocked:", err));
+    }
+};
+
+socket.onclose = () => console.log("WS CLOSED");
+
+// Accept Request
+document.getElementById("acceptBtn").onclick = () => {
+    if (!currentRequestId) return;
+
+    socket.send(JSON.stringify({
+        action: "accept",
+        request_id: currentRequestId
+    }));
+
+    fetch("/bookings/create/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({
+            request_id: currentRequestId,
+            status: "accepted"
+        })
+    }).then(res => res.json())
+      .then(data => {
+        if (data.success) {
+            stopRing();
+            location.reload(); // Refresh bookings table
+        }
+    });
+
+    document.getElementById("requestBox").style.display = "none";
+};
+
+// Decline Request
+document.getElementById("declineBtn").onclick = () => {
+    if (!currentRequestId) return;
+
+    socket.send(JSON.stringify({
+        action: "decline",
+        request_id: currentRequestId
+    }));
+
+    stopRing();
+    document.getElementById("requestBox").style.display = "none";
+};
+
+
+// Utility → Stop Sound
+function stopRing() {
+    ring.pause();
+    ring.currentTime = 0;
+}
+
+// CSRF Helper
+function getCookie(name) {
+    let cookieValue = null;
+    const cookies = document.cookie ? document.cookie.split(";") : [];
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + "=")) {
+            cookieValue = cookie.substring(name.length + 1);
+            break;
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+
+
+
+{% endblock %}

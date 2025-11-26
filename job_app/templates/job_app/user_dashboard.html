@@ -1,0 +1,132 @@
+{% extends 'job_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .dashboard-sidebar {
+    height: 62.4vh;
+    background: #ffffff;
+    border-right: 1px solid #ddd;
+    padding-top: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    text-align: center;
+  }
+
+  .profile-box {
+    margin-bottom: 25px;
+  }
+
+  .profile-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0d6efd;
+  }
+
+  .profile-box h5 {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .dashboard-sidebar .nav-link {
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+    text-align: left;
+  }
+
+  .dashboard-sidebar .nav-link:hover,
+  .dashboard-sidebar .nav-link.active {
+    background: #333;
+    color: #fff !important;
+  }
+
+  .dashboard-content {
+    height: 45vh;
+    margin-left: 260px;
+    padding: 35px;
+  }
+</style>
+
+<!-- SIDEBAR -->
+<div class="dashboard-sidebar">
+
+  <!-- Profile Section -->
+ {% load static %}
+
+<div class="d-flex align-items-center mb-4">
+  {% if user.profile.profile_image %}
+    <img src="{{ user.profile.profile_image.url }}" 
+         alt="Profile Image" 
+         class="rounded-circle me-3 border"
+         width="80" height="80">
+  {% else %}
+    <img src="{% static 'images/default.png' %}" 
+         alt="Default Image" 
+         class="rounded-circle me-3 border"
+         width="80" height="80">
+  {% endif %}
+  <div>
+    <h4 class="mb-0">{{ user.get_full_name|default:user.username }}</h4>
+    <p class="text-muted mb-0">{{ user.profile.get_role_display }}</p>
+  </div>
+</div>
+
+
+  <!-- Sidebar Menu -->
+  <ul class="nav flex-column px-2">
+    <li class="nav-item">
+      <a class="nav-link {% if section == 'bookings' %}active{% endif %}" href="{% url 'job_app:user_bookings' %}">
+        My Bookings
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link {% if section == 'profile' %}active{% endif %}" href="{% url 'job_app:profile_settings' %}">
+        Profile Settings
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="dashboard-content">
+
+  <h3 class="fw-bold mb-4">My Bookings</h3>
+
+  {% if bookings %}
+    <div class="table-responsive">
+      <table class="table table-striped text-center align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Service</th>
+            <th>Provider</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.service.title }}</td>
+            <td>{{ booking.worker.user.username }}</td>
+            <td>{{ booking.date }}</td>
+            <td><span class="badge bg-success">{{ booking.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-muted text-center">You have no bookings yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

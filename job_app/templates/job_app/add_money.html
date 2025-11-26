@@ -1,0 +1,20 @@
+{% extends 'job_app/base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+  <h3>Add ₹{{ amount }} to Wallet</h3>
+  <form action="{% url 'job_app:payment_success' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="amount" value="{{ amount }}">
+    <script
+      src="https://checkout.razorpay.com/v1/checkout.js"
+      data-key="{{ razorpay_key }}"
+      data-amount="{{ amount|floatformat:2 }}00"
+      data-currency="INR"
+      data-buttontext="Pay ₹{{ amount }}"
+      data-name="Job Portal"
+      data-description="Wallet Top-up"
+      data-theme.color="#28a745">
+    </script>
+  </form>
+</div>
+{% endblock %}

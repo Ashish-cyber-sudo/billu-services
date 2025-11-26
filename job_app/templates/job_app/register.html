@@ -1,0 +1,133 @@
+{% extends 'job_app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow p-4">
+        <h4 class="fw-bold text-center mb-3">Create an Account</h4>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- USERNAME -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Username</label>
+            <input type="text" name="username" class="form-control" required>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+
+          <!-- PHONE -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Phone</label>
+            <input type="text" name="phone" class="form-control" required>
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+
+          <!-- ROLE -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Role</label>
+            <select name="role" class="form-select" required>
+              <option value="" selected disabled>Select Role</option>
+              <option value="service_seeker">Service Seeker</option>
+              <option value="provider">Provider</option>
+            </select>
+          </div>
+
+          <!-- LOCATION -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Location</label>
+            <input id="location" name="location" type="text" class="form-control"
+                   placeholder="Search your address..." autocomplete="off" required>
+          </div>
+
+          <!-- Hidden Lat/Lng -->
+          <input type="hidden" id="latitude" name="latitude">
+          <input type="hidden" id="longitude" name="longitude">
+
+          <!-- MAP -->
+          <label class="fw-semibold mb-2">Select Your Location on Map</label>
+          <div id="map" class="rounded border mb-3" style="height: 300px;"></div>
+
+          <!-- SUBMIT -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-4">Register</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Google Maps Places API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSD4WISok0dBzVQ4IR_CMicIT_TsKUQvI&libraries=places"></script>
+
+<script>
+function initAutocomplete() {
+  const locationInput = document.getElementById('location');
+  const latInput = document.getElementById('latitude');
+  const lngInput = document.getElementById('longitude');
+
+  const defaultLocation = { lat: 20.5937, lng: 78.9629 }; // INDIA
+
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: defaultLocation,
+    zoom: 5,
+  });
+
+  let marker = new google.maps.Marker({
+    map: map,
+    position: defaultLocation,
+    draggable: true,
+  });
+
+  // Autocomplete
+  const autocomplete = new google.maps.places.Autocomplete(locationInput);
+  autocomplete.bindTo("bounds", map);
+
+  autocomplete.addListener("place_changed", function() {
+    const place = autocomplete.getPlace();
+    if (!place.geometry) return;
+
+    // Move map to place
+    map.setCenter(place.geometry.location);
+    map.setZoom(14);
+
+    marker.setPosition(place.geometry.location);
+
+    latInput.value = place.geometry.location.lat();
+    lngInput.value = place.geometry.location.lng();
+  });
+
+  // When marker is dragged
+  google.maps.event.addListener(marker, "dragend", function() {
+    const pos = marker.getPosition();
+    latInput.value = pos.lat();
+    lngInput.value = pos.lng();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initAutocomplete);
+</script>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <style>
+
+.search-select, .search-input {
+    border-radius: 20px !important;
+}
+
+.search-input {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.suggestions-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,.15);
+    display: none;
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 2000;
+}
+
+.suggestions-box.show {
+    display: block;
+}
+
+.radius-wrapper {
+  width: 180px;
+}
+
+.radius-label {
+  font-size: 0.85rem;
+  color: #ddd;
+  white-space: nowrap;
+}
+
+.radius-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #ffc107, #ff9800);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.radius-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  background: #ffffff;
+  border: 2px solid #ffc107;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.radius-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.radius-value {
+  font-weight: 600;
+  color: #ffc107;
+  font-size: 0.9rem;
+}
+
+.main-container {
+  padding-top: 35px;
+  height:100vh
+}
+
+.footer{
+  margin-top: 176px;
+}
+</style>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Billu{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body class="main-container">
+  {% include 'job_app/navbar.html' %}
+  <main class="container py-4">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  {% include "job_app/footer.html"%}
+  {% block scripts %}{% endblock %}
+  
+</body>
+</html>

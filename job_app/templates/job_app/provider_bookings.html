@@ -1,0 +1,21 @@
+{% extends 'job_app/base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h3>My Assigned Bookings</h3>
+  <table class="table table-striped">
+    <thead><tr><th>Service</th><th>Seeker</th><th>Status</th><th>Created</th></tr></thead>
+    <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.service.title }}</td>
+          <td>{{ booking.seeker.user.username }}</td>
+          <td>{{ booking.status }}</td>
+          <td>{{ booking.created_at }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="text-center">No bookings yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'job_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="py-5 bg-light text-center border-bottom">
+  <div class="container">
+    <h1 class="fw-bold mb-3">About Us</h1>
+    <p class="lead text-muted">
+      Empowering people to find and offer trusted local services easily and securely.
+    </p>
+  </div>
+</section>
+
+<!-- About Story -->
+<section class="container py-5">
+  <div class="row align-items-center">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=500&fit=crop"
+           class="img-fluid rounded-4 shadow-sm" alt="Our Story">
+    </div>
+    <div class="col-md-6">
+      <h2 class="fw-bold mb-3">Our Story</h2>
+      <p class="text-muted">
+        We started this platform with a simple mission — to connect local professionals with people who
+        need their services. Whether you’re looking for a skilled electrician, a driver, or a home cleaner,
+        we make it simple, safe, and fast to find help you can trust.
+      </p>
+      <p class="text-muted">
+        Our network of verified service providers continues to grow, ensuring that no matter where you are,
+        you can find quality help right around the corner.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Our Mission Section -->
+<section class="py-5 bg-dark text-white">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-3">Our Mission</h2>
+    <p class="lead mb-4">
+      To simplify everyday life by bridging the gap between customers and trusted local professionals.
+    </p>
+    <div class="row justify-content-center">
+      <div class="col-md-4 mb-3">
+        <div class="p-4 bg-white text-dark rounded-3 shadow-sm h-100">
+          <i class="bi bi-people fs-1 text-primary mb-3"></i>
+          <h5 class="fw-bold">Community Driven</h5>
+          <p>We empower local communities by supporting skilled workers and helping them reach more customers.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="p-4 bg-white text-dark rounded-3 shadow-sm h-100">
+          <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+          <h5 class="fw-bold">Trusted & Secure</h5>
+          <p>Every service provider is verified to ensure quality and safety for every booking.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="p-4 bg-white text-dark rounded-3 shadow-sm h-100">
+          <i class="bi bi-lightning-charge fs-1 text-primary mb-3"></i>
+          <h5 class="fw-bold">Fast & Reliable</h5>
+          <p>With our smart location-based system, finding the right help nearby takes just a few seconds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Meet the Team Section -->
+<section class="container py-5 text-center">
+  <h2 class="fw-bold mb-4">Meet Our Team</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-3 mb-4">
+      <div class="card border-0 shadow-sm">
+        <img src="https://randomuser.me/api/portraits/men/31.jpg" class="card-img-top" alt="Team Member">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Ravi Sharma</h5>
+          <p class="text-muted small">Founder & CEO</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-4">
+      <div class="card border-0 shadow-sm">
+        <img src="https://randomuser.me/api/portraits/women/65.jpg" class="card-img-top" alt="Team Member">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Neha Gupta</h5>
+          <p class="text-muted small">Product Manager</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-4">
+      <div class="card border-0 shadow-sm">
+        <img src="https://randomuser.me/api/portraits/men/85.jpg" class="card-img-top" alt="Team Member">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Amit Verma</h5>
+          <p class="text-muted small">Lead Developer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light text-center">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Join Us Today</h2>
+    <p class="text-muted mb-4">
+      Become part of our growing network of trusted service providers and customers.
+    </p>
+    <a href="{% url 'job_app:register' %}" class="btn btn-primary px-4">Get Started</a>
+  </div>
+</section>
+
+{% endblock %}

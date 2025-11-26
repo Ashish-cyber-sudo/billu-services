@@ -1,0 +1,216 @@
+<style>
+.suggestions-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 250px;
+    display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 1000;  
+}
+.container {
+    max-width: 1400px;  
+    margin: 0 auto;
+    padding: 0 15px;  
+}
+
+
+
+  </style>
+
+
+
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-warning" href="{% url 'job_app:home' %}">Billu</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+      aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <!-- Left Nav -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'job_app:home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'service_list' %}active{% endif %}" href="{% url 'job_app:service_list' %}">Find Workers</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'job_app:about' %}">About</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'job_app:contact' %}">Contact</a></li>
+      </ul>
+
+      <!-- Search Form -->
+      <form class="d-flex align-items-center position-relative me-3" method="GET" action="{% url 'job_app:service_list' %}">
+        <div class="position-relative w-100">
+           <input class="form-control rounded-pill" type="search" placeholder="Search workers or services…" name="search"
+             id="searchInput" value="{{ request.GET.search }}" autocomplete="off">
+           <div id="searchSuggestions" class="list-group suggestions-box"></div>
+         </div>
+        
+          <select name="category" class="form-select form-select-sm me-2 rounded-pill" style="width:180px;">
+                <option value="">All Services</option>
+                <option value="welder" {% if request.GET.category == "welder" %}selected{% endif %}>Welder</option>
+                <option value="plumber" {% if request.GET.category == "plumber" %}selected{% endif %}>Plumber</option>
+                <option value="painter" {% if request.GET.category == "painter" %}selected{% endif %}>Painter</option>
+                <option value="electrician" {% if request.GET.category == "electrician" %}selected{% endif %}>Electrician</option>
+                <option value="carpenter" {% if request.GET.category == "carpenter" %}selected{% endif %}>Carpenter</option>
+                <option value="bike_mechanic" {% if request.GET.category == "bike_mechanic" %}selected{% endif %}>Bike Mechanic</option>
+                <option value="car_mechanic" {% if request.GET.category == "car_mechanic" %}selected{% endif %}>Car Mechanic</option>
+                <option value="tyre_repair" {% if request.GET.category == "tyre_repair" %}selected{% endif %}>Tyre Repair</option>
+                <option value="waste_collector" {% if request.GET.category == "waste_collector" %}selected{% endif %}>Waste Collector</option>
+                <option value="pest_control" {% if request.GET.category == "pest_control" %}selected{% endif %}>Pest Control</option>
+                <option value="cleaning" {% if request.GET.category == "cleaning" %}selected{% endif %}>Cleaning Service</option>
+                <option value="gardening" {% if request.GET.category == "gardening" %}selected{% endif %}>Gardening Service</option>
+                <option value="painting" {% if request.GET.category == "painting" %}selected{% endif %}>Painting Service</option>
+                <option value="moving" {% if request.GET.category == "moving" %}selected{% endif %}>Moving Service</option>
+                <option value="delivery" {% if request.GET.category == "delivery" %}selected{% endif %}>Delivery Service</option>
+                <option value="tutor" {% if request.GET.category == "tutor" %}selected{% endif %}>Tutor</option>
+                <option value="driver" {% if request.GET.category == "driver" %}selected{% endif %}>Driver</option>
+                <option value="chef" {% if request.GET.category == "chef" %}selected{% endif %}>Chef</option>
+                <option value="babysitter" {% if request.GET.category == "babysitter" %}selected{% endif %}>Babysitter</option>
+                <option value="maid" {% if request.GET.category == "maid" %}selected{% endif %}>Maid</option>
+                <option value="security_guard" {% if request.GET.category == "security_guard" %}selected{% endif %}>Security Guard</option>
+                <option value="photographer" {% if request.GET.category == "photographer" %}selected{% endif %}>Photographer</option>
+                <option value="event_planner" {% if request.GET.category == "event_planner" %}selected{% endif %}>Event Planner</option>
+                <option value="female_tailor" {% if request.GET.category == "female_tailor" %}selected{% endif %}>Female Tailor</option>
+                <option value="other" {% if request.GET.category == "other" %}selected{% endif %}>Other</option>
+          </select>
+
+        <div class="d-flex align-items-center ms-3 radius-wrapper">
+          <select name="radius" class="form-select form-select-sm rounded-pill" style="width:120px;">
+            <option value="">Any Distance</option>
+            <option value="2" {% if request.GET.radius == '2' %}selected{% endif %}>Within 2 km</option>
+            <option value="5" {% if request.GET.radius == '5' %}selected{% endif %}>Within 5 km</option>
+            <option value="10" {% if request.GET.radius == '10' %}selected{% endif %}>Within 10 km</option>
+            <option value="20" {% if request.GET.radius == '20' %}selected{% endif %}>Within 20 km</option>
+            <option value="40" {% if request.GET.radius == '40' %}selected{% endif %}>Within 40 km</option>
+            <option value="50" {% if request.GET.radius == '50' %}selected{% endif %}>Within 50 km</option>
+        </select>
+  <!-- Hidden fields for lat/lon -->
+        <input type="hidden" name="lat" id="user-lat">
+        <input type="hidden" name="lon" id="user-lon">
+      </div>
+        <button class="btn btn-primary" onclick="sendRequests()">Search</button>
+    </form>
+
+      <!-- Auth + Dashboard Links -->
+      <ul class="navbar-nav ms-3">
+        {% if user.is_authenticated %}
+          {% if user.profile.role == 'provider' %}
+            <li class="nav-item">
+              <a class="nav-link text-info fw-semibold" href="{% url 'job_app:provider_dashboard' %}">
+                <i class=""></i> Dashboard
+              </a>
+            </li>
+          {% elif user.profile.role == 'service_seeker' %}
+            <li class="nav-item">
+              <a class="nav-link text-info fw-semibold" href="{% url 'job_app:user_dashboard' %}">
+                <i class=""></i> Dashboard
+              </a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-semibold" href="{% url 'job_app:logout' %}">
+              <i class=""></i> Logout
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'job_app:login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'job_app:register' %}">Register</a></li>
+        {% endif %}
+        {% if user.is_authenticated %}
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'job_app:wallet' %}">Wallet (₹{{ user.profile.wallet_balance }})</a>
+</li>
+{% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- 🔍 Suggestions + Geolocation -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("searchInput");
+  const suggestionsBox = document.getElementById("searchSuggestions");
+  const radiusSelect = document.getElementById("radius");
+  const latInput = document.getElementById("user-lat");
+  const lonInput = document.getElementById("user-lon");
+
+  // 🔹 Auto-fill user location if allowed
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        latInput.value = pos.coords.latitude;
+        lonInput.value = pos.coords.longitude;
+      },
+      err => console.warn("Geolocation blocked or failed:", err.message)
+    );
+  }
+
+  // 🔹 Live search suggestions
+  input?.addEventListener("keyup", () => {
+    const query = input.value.trim();
+    if (!query) {
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.classList.remove("show");
+      return;
+    }
+
+    fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results && data.results.length > 0) {
+          suggestionsBox.innerHTML = data.results.map(item => `
+            <a href="${item.url}" class="list-group-item list-group-item-action">
+              <strong>${item.name}</strong><br>
+              <small class="text-muted">${item.provider}</small>
+            </a>
+          `).join('');
+          suggestionsBox.classList.add("show");
+        } else {
+          suggestionsBox.innerHTML = `
+            <div class="list-group-item text-muted text-center">No results found</div>
+          `;
+          suggestionsBox.classList.add("show");
+        }
+      })
+      .catch(err => console.error("Search error:", err));
+  });
+
+  // 🔹 Auto-submit form when distance changes
+  radiusSelect?.addEventListener("change", function () {
+    this.form?.submit();
+  });
+});
+</script>
+
+<script>
+function sendRequests() {
+    if (!navigator.geolocation) {
+        alert("Enable location access!");
+        return;
+    }
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        fetch("/send-requests/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                service_id: "{{ selected_service_id }}",
+                radius: "{{ selected_radius }}",
+                lat: pos.coords.latitude,
+                lon: pos.coords.longitude
+            })
+        });
+        alert("Requests sent to providers!");
+    });
+}
+</script>
+

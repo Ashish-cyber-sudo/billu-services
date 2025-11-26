@@ -1,0 +1,125 @@
+{% extends 'job_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Slider Section -->
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1600&h=600&fit=crop"
+           class="d-block w-100" style="height: 500px; object-fit: cover;" alt="Plumber">
+      <div class="carousel-caption bg-dark bg-opacity-50 rounded p-3">
+        <h2 class="fw-bold text-white">Find Skilled Professionals Near You</h2>
+        <p>From electricians to drivers, discover trusted local workers instantly.</p>
+        <a href="{% url 'job_app:service_list' %}" class="btn btn-primary mt-2">Explore Services</a>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=1600&h=600&fit=crop"
+           class="d-block w-100" style="height: 500px; object-fit: cover;" alt="Carpenter">
+      <div class="carousel-caption bg-dark bg-opacity-50 rounded p-3">
+        <h2 class="fw-bold text-white">Hire with Confidence</h2>
+        <p>Verified professionals ready to help you with any task.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=600&fit=crop"
+           class="d-block w-100" style="height: 500px; object-fit: cover;" alt="Electrician">
+      <div class="carousel-caption bg-dark bg-opacity-50 rounded p-3">
+        <h2 class="fw-bold text-white">Fast & Reliable Services</h2>
+        <p>Book nearby service providers in just a few clicks.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
+
+<!-- Dynamic Services Section -->
+<section class="container mb-5">
+  <h3 class="text-center mb-4">Our Top Services</h3>
+  <div class="row g-4 justify-content-center">
+    {% if services %}
+      {% for service in services|slice:":8" %}
+        <div class="col-md-4 col-lg-3">
+          <div class="card shadow-sm border-0 h-100 hover-shadow transition">
+            {% if service.image %}
+              <img src="{{ service.image.url }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+            {% else %}
+              <img src="https://via.placeholder.com/400x200?text=No+Image" class="card-img-top">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ service.title }}</h5>
+              <p class="text-muted small mb-1">{{ service.get_category_display }} • {{ service.provider.user.username }}</p>
+              {% if service.provider.phone %}
+                <a href="tel:{{ service.provider.phone }}" class="btn btn-sm btn-success me-2">
+                  <i class="bi bi-telephone"></i> Call
+                </a>
+              {% endif %}
+              <a href="{% url 'job_app:service_detail' service.id %}" class="btn btn-sm btn-outline-primary">
+                Details
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-muted">No active services available yet.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Static Highlighted Services (Fallback / Promo Section) -->
+<section class="bg-light py-5">
+  <div class="container text-center">
+    <h3 class="mb-4">Popular Service Categories</h3>
+    <div class="row g-4 justify-content-center">
+      {% for cat, label in Service.CATEGORY_CHOICES %}
+        <div class="col-6 col-md-3">
+          <a href="{% url 'job_app:service_list' %}?category={{ cat }}" class="text-decoration-none text-dark">
+            <div class="card shadow-sm border-0 p-4 h-100 hover-shadow">
+              <i class="bi bi-tools fs-1 text-primary mb-3"></i>
+              <h6 class="fw-semibold">{{ label }}</h6>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Join Us Section -->
+<section class="py-5 text-center">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Are You a Service Provider?</h2>
+    <p class="text-muted mb-4">Join thousands of workers and grow your business with our platform.</p>
+    <a href="{% url 'job_app:register' %}" class="btn btn-success btn-lg px-4">Join as Provider</a>
+  </div>
+</section>
+
+
+<!-- Auto Location -->
+<script>
+navigator.geolocation.getCurrentPosition((pos) => {
+  const form = document.querySelector("form[action*='service_list']");
+  if (form) {
+    const lat = document.createElement("input");
+    const lon = document.createElement("input");
+    lat.type = lon.type = "hidden";
+    lat.name = "lat"; lon.name = "lon";
+    lat.value = pos.coords.latitude;
+    lon.value = pos.coords.longitude;
+    form.appendChild(lat);
+    form.appendChild(lon);
+  }
+});
+</script>
+
+{% endblock %}

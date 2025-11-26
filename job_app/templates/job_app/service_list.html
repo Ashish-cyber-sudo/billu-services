@@ -1,0 +1,67 @@
+{% extends 'job_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 pt-5">
+
+  <h3 class="mb-4">Available Services</h3>
+
+  <div class="row">
+    {% for s in services %}
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-3 p-3">
+
+        <h5>{{ s.title }}</h5>
+        <p>{{ s.description|default:"No description" }}</p>
+
+        {% if s.distance %}
+        <p class="text-muted">
+          <i class="bi bi-geo"></i> {{ s.distance|floatformat:1 }} km away
+        </p>
+        {% endif %}
+
+        <button class="btn btn-primary w-100"
+                onclick="sendRequest({{ s.id }})">
+          Send Request
+        </button>
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+function sendRequest(serviceId) {
+    navigator.geolocation.getCurrentPosition(pos => {
+        const radius = prompt("Enter search radius (km):", 10);
+        if (!radius) return;
+
+        fetch("/send-requests/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                service_id: serviceId,
+                lat: pos.coords.latitude,
+                lon: pos.coords.longitude,
+                radius: radius
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert("Requests sent to providers!");
+            } else {
+                alert("Error: " + (data.error || "Unable to send request"));
+            }
+        })
+        .catch(err => alert("Network error: " + err));
+    });
+}
+</script>
+
+{% endblock %}
