@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 from decouple import config
-
+import dj_database_url
 # ---------------------------------------------------
 # BASE DIRECTORY
 # ---------------------------------------------------
@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',
     
     
     # Third-party
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'job_portal.urls'
@@ -80,13 +82,17 @@ TEMPLATES = [
 # ---------------------------------------------------
 # DATABASE
 # ---------------------------------------------------
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get("postgresql://billu_service_user:iHc1arcc9yrdaM5eXTGNqrFHEsxgeR5E@dpg-d4jbl8gbdp1s73fqqrmg-a/billu_service"))
+}
 AUTH_PASSWORD_VALIDATORS = []
 
 # ---------------------------------------------------
@@ -109,6 +115,9 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ---------------------------------------------------
 # MEDIA FILES
