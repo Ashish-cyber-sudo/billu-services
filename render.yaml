@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: job-portal
+    env: python
+    runtime: python3.13
+    repo: .
+    plan: starter
+    region: oregon
+
+    # This runs Daphne for HTTP + WebSockets
+    startCommand: |
+      python manage.py collectstatic --no-input && \
+      python manage.py migrate && \
+      daphne -b 0.0.0.0 -p 10000 job_portal.asgi:application
+
+    buildCommand: pip install -r requirements.txt
+
+    envVars:
+      - key: DEBUG
+        value: "False"
+
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: job-portal-db
+          property: connectionString
+
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,127.0.0.1,localhost"
+
+
+databases:
+  - name: job-portal-db
+    plan: free
+    region: oregon

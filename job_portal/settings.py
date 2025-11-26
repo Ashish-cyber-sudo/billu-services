@@ -95,9 +95,13 @@ TEMPLATES = [
 # }
 
 
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get("postgresql://billu_service_user:iHc1arcc9yrdaM5eXTGNqrFHEsxgeR5E@dpg-d4jbl8gbdp1s73fqqrmg-a/billu_service"))
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
 }
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.environ.get("postgresql://billu_service_user:iHc1arcc9yrdaM5eXTGNqrFHEsxgeR5E@dpg-d4jbl8gbdp1s73fqqrmg-a/billu_service"))
+# }
 AUTH_PASSWORD_VALIDATORS = []
 
 # ---------------------------------------------------
