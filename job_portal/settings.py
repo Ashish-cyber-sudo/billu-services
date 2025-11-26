@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ---------------------------------------------------
 SECRET_KEY = 'django-insecure-please-change-me'
 DEBUG = True
-ALLOWED_HOSTS = ['billu.free.service.com', 'localhost', '127.0.0.1','192.168.16.1']
+ALLOWED_HOSTS = ["*", ".onrender.com", 'localhost', '127.0.0.1','192.168.16.1']
 
 # ---------------------------------------------------
 # INSTALLED APPS
