@@ -1,0 +1,122 @@
+{% load static %}
+
+
+<!-- Sidebar -->
+<style>
+  {% comment %} .dashboard-sidebar {
+    background: #ffffff;
+    border-right: 1px solid #ddd;
+    padding-top: 70px;
+    position: static;
+    top: 0;
+    left: 0;
+    width: 230px;
+    text-align: center;
+  } {% endcomment %}
+
+
+      .profile-box {
+    margin-bottom: 25px;
+  }
+
+  .profile-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0d6efd;
+  }
+
+  .profile-box h5 {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+.dashboard-sidebar .profile-box img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0d6efd;
+}
+
+ .dashboard-sidebar .nav-link {
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+    text-align: left;
+  }
+
+ .dashboard-sidebar .nav-link:hover,
+  .dashboard-sidebar .nav-link.active {
+    background: #333;
+    color: #fff !important;
+  }
+
+@media (max-width: 767px) {
+  .sidebar-toggle {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1050;
+  }
+}
+
+</style>
+
+<nav id="sidebarMenu"
+     class="col-12 col-md-3 col-lg-2 bg-white border-end min-vh-100 p-3 collapse d-md-block dashboard-sidebar">
+
+  <!-- Profile Section -->
+  <div class="profile-box text-center mb-4">
+    {% if user.profile.profile_image %}
+      <img src="{{ user.profile.profile_image.url }}" alt="Profile Image">
+    {% else %}
+      <img src="{% static 'images/default.png' %}" alt="Default Profile Image">
+    {% endif %}
+    <h6 class="fw-semibold mb-0 mt-2">{{ user.get_full_name|default:user.username }}</h6>
+    <small class="text-muted">{{ user.profile.get_role_display }}</small>
+  </div>
+
+  <!-- Sidebar Menu -->
+  <ul class="nav flex-column">
+    <li class="nav-item mb-2">
+      <a class="nav-link d-flex align-items-center {% if section == 'dashboard' %}active{% endif %}"
+         href="{% url 'job_app:user_dashboard' %}">
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item mb-2">
+      <a class="nav-link d-flex align-items-center {% if section == 'bookings' %}active{% endif %}"
+         href="{% url 'job_app:user_bookings' %}">
+        <i class="bi bi-calendar-check me-2"></i> My Bookings
+      </a>
+    </li>
+    <li class="nav-item mb-2">
+      <a class="nav-link d-flex align-items-center {% if section == 'services' %}active{% endif %}"
+         href="{% url 'job_app:service_list' %}">
+        <i class="bi bi-briefcase me-2"></i> My Services
+      </a>
+    </li>
+    <li class="nav-item mb-2">
+      <a class="nav-link d-flex align-items-center {% if section == 'profile' %}active{% endif %}"
+         href="{% url 'job_app:profile_settings' %}">
+        <i class="bi bi-person-gear me-2"></i> Profile Settings
+      </a>
+    </li>
+    <li class="nav-item mt-3">
+      <a class="nav-link d-flex align-items-center text-danger"
+         href="{% url 'job_app:logout' %}">
+        <i class="bi bi-box-arrow-right me-2"></i> Logout
+      </a>
+    </li>
+  </ul>
+  
+</nav>
+<!-- Mobile Sidebar Toggle -->
+
+
+<!-- End of Sidebar -->

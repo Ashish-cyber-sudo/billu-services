@@ -1,40 +1,56 @@
 <footer class="footer bg-dark py-5 border-top mt-auto">
   <div class="container">
     <div class="row">
-      <div class="col-md-4 text-center text-md-start mb-3">
-        <h5 class="text-white">Billu</h5>
+
+      <!-- Brand -->
+      <div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+        <h5 class="text-white fw-bold">Billu</h5>
         <p class="text-secondary small mb-0">Your next career move starts here.</p>
       </div>
 
-      <div class="col-6 col-md-2 mb-3">
-        <h6 class="text-white">Quick Links</h6>
+      <!-- Quick Links -->
+      <div class="col-6 col-md-2 mb-4 mb-md-0">
+        <h6 class="text-white fw-semibold">Quick Links</h6>
         <ul class="list-unstyled mb-0">
-          <li><a href="#" class="text-secondary text-decoration-none small">Browse Jobs</a></li>
-          <li><a href="#" class="text-secondary text-decoration-none small">Companies</a></li>
-          <li><a href="#" class="text-secondary text-decoration-none small">Salaries</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none small d-block py-1 hover-link">Browse Jobs</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none small d-block py-1 hover-link">Companies</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none small d-block py-1 hover-link">Salaries</a></li>
         </ul>
       </div>
 
-      <div class="col-6 col-md-2 mb-3">
-        <h6 class="text-white">Support</h6>
+      <!-- Support -->
+      <div class="col-6 col-md-2 mb-4 mb-md-0">
+        <h6 class="text-white fw-semibold">Support</h6>
         <ul class="list-unstyled mb-0">
-          <li><a href="#" class="text-secondary text-decoration-none small">Help Center</a></li>
-          <li><a href="#" class="text-secondary text-decoration-none small">Contact Us</a></li>
-          <li><a href="#" class="text-secondary text-decoration-none small">Privacy Policy</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none small d-block py-1 hover-link">Help Center</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none small d-block py-1 hover-link">Contact Us</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none small d-block py-1 hover-link">Privacy Policy</a></li>
         </ul>
       </div>
 
-      <div class="col-md-4 text-center text-md-start mt-3 mt-md-0">
-        <h6 class="text-white">Stay Connected</h6>
-        <a href="#" class="text-secondary me-3 fs-5"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" class="text-secondary fs-5"><i class="fab fa-twitter"></i></a>
+      <!-- Social -->
+      <div class="col-md-4 text-center text-md-start">
+        <h6 class="text-white fw-semibold">Stay Connected</h6>
+        <a href="#" class="text-secondary me-3 fs-5 hover-social" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="text-secondary fs-5 hover-social" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
       </div>
     </div>
 
     <hr class="my-4 border-secondary">
 
+    <!-- Copyright -->
     <div class="text-center text-secondary small">
       Job Portal &copy; {{ now|date:'Y' }} | All rights reserved.
     </div>
   </div>
 </footer>
+
+<style>
+  .hover-link:hover {
+    color: #0d6efd !important;
+  }
+  .hover-social:hover {
+    color: #0d6efd !important;
+    transition: color 0.2s ease;
+  }
+</style>

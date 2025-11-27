@@ -1,35 +1,34 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.models import User
+import json
+import random
+import uuid
+from math import asin, cos, radians, sin, sqrt
+from decimal import Decimal  # if you use Decimal for wallet
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from django.apps import apps
+from django.conf import settings
+from django.contrib import admin, messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db import transaction
+from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.contrib import messages,admin
-from django.conf import settings
-from django.urls import reverse
-from django.db.models import Q
-from django.db import transaction
-from django.utils import timezone
-from django.http import JsonResponse
-from math import radians, cos, sin, asin, sqrt
-from .models import Profile, Service, SeekerBooking, ProviderBooking
-from .models import Review, WalletTransaction
-from .models import PhoneOTP
-from .models import ServiceRequest
-from twilio.rest import Client
-from .forms import RegisterForm, ServiceForm, SeekerBookingForm, ProviderBookingForm
-
 from geopy.distance import geodesic
-from .forms import ReviewForm
-from .utils import calculate_distance 
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from twilio.rest import Client
 from job_app.utils import calculate_distance
-from django.apps import apps 
-import uuid
-import random
-import json
+from .forms import (ProviderBookingForm,RegisterForm,ReviewForm,SeekerBookingForm,ServiceForm,)
+from .models import (PhoneOTP,Profile,ProviderBooking,Review,SeekerBooking,Service,ServiceRequest,WalletTransaction,
+                    #  Booking
+                    )
 import razorpay
+
 
 
 @property
