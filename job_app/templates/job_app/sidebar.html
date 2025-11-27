@@ -68,7 +68,7 @@
 </style>
 
 <nav id="sidebarMenu"
-     class="col-12 col-md-3 col-lg-2 bg-white border-end min-vh-100 p-3 collapse d-md-block dashboard-sidebar">
+     class="col-6 col-md-3 col-lg-2 bg-white border-end min-vh-100 p-3 collapse d-md-block dashboard-sidebar">
 
   <!-- Profile Section -->
   <div class="profile-box text-center mb-4">
@@ -95,12 +95,15 @@
         <i class="bi bi-calendar-check me-2"></i> My Bookings
       </a>
     </li>
+    {% if user.profile.role == 'provider' %}
     <li class="nav-item mb-2">
       <a class="nav-link d-flex align-items-center {% if section == 'services' %}active{% endif %}"
          href="{% url 'job_app:service_list' %}">
         <i class="bi bi-briefcase me-2"></i> My Services
       </a>
     </li>
+    {% endif %}
+
     <li class="nav-item mb-2">
       <a class="nav-link d-flex align-items-center {% if section == 'profile' %}active{% endif %}"
          href="{% url 'job_app:profile_settings' %}">
